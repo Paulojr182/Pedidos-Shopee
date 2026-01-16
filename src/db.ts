@@ -1,7 +1,11 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 export async function connectDB() {
-  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/shopee'
-  await mongoose.connect(uri)
-  console.log('Connected to MongoDB')
+	const uri = process.env.MONGODB_URI;
+
+	if (!uri) {
+		throw new Error("MONGODB_URI is not defined in environment variables");
+	}
+	await mongoose.connect(uri);
+	console.log("Connected to MongoDB");
 }

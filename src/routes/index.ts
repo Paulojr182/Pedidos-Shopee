@@ -1,7 +1,7 @@
-import { Router } from 'express'
+import { Router } from "express";
 
-const router = Router()
+const router = Router();
 
-router.get('/ping', (_req, res) => res.json({ pong: true }))
+router.get("/ping", (_req, res) => res.json({ pong: true }));
 
-export default router
+export default router;
