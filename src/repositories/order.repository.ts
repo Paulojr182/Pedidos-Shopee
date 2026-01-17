@@ -8,6 +8,7 @@ export interface IOrderRepository {
 	findById(orderId: string): Promise<Order | null>;
 	update(orderId: string, updatedOrder: Partial<OrderDocument>): Promise<Order | null>;
 	delete(orderId: string): Promise<boolean>;
+	createManyOrders(ordersData: Partial<OrderDocument>[]): Promise<{ orders: Order[]; failed: Partial<OrderDocument>[] }>;
 }
 
 export interface GetAllOrdersFilter {
@@ -66,6 +67,36 @@ export class OrderRepository implements IOrderRepository {
 	async delete(orderId: string): Promise<boolean> {
 		const res = await OrderModel.findOneAndDelete({ id: orderId }).exec();
 		return !!res;
+	}
+
+	async createManyOrders(ordersData: Partial<OrderDocument>[]): Promise<{ orders: Order[]; failed: Partial<OrderDocument>[] }> {
+		const ordersWithIds = ordersData.map((orderData) => ({
+			...orderData,
+			id: this.generateId(),
+		}));
+		try {
+			const createdOrders = await OrderModel.insertMany(ordersWithIds, { ordered: false });
+			const inserted = createdOrders.map((doc) => this.mapToDTO(doc as OrderDocument));
+			return { orders: inserted, failed: [] };
+		} catch (err) {
+			// biome-ignore lint/suspicious/noExplicitAny: <Will be fixed later>
+			const e: any = err;
+			// biome-ignore lint/suspicious/noExplicitAny: <Will be fixed later>
+			const writeErrors: any[] = e.writeErrors || [];
+			// biome-ignore lint/suspicious/noExplicitAny: <Will be fixed later>
+			const insertedDocs: any[] = e.insertedDocs || [];
+
+			const failedDetails = writeErrors.map((w) => ({
+				index: w.index,
+				code: w.code,
+				message: w.errmsg,
+				doc: w.op, // documento que falhou
+			}));
+
+			const failedDocs = failedDetails.map((f) => ordersWithIds[f.index]);
+
+			return { orders: insertedDocs, failed: failedDocs };
+		}
 	}
 
 	private generateId(): string {

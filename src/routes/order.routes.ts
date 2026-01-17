@@ -2,6 +2,7 @@ import { Router } from "express";
 import { OrderController } from "../controllers/order.controller";
 import { OrderUseCase } from "../usecases/order.usecase";
 import { OrderRepository } from "../repositories/order.repository";
+import { upload } from "../middleware/upload.middleware";
 
 const orderRepository = new OrderRepository();
 const orderUseCase = new OrderUseCase(orderRepository);
@@ -14,5 +15,6 @@ orderRouter.get("/", orderController.getAllOrders.bind(orderController));
 orderRouter.get("/:orderId", orderController.getOrder.bind(orderController));
 orderRouter.put("/:orderId", orderController.updateOrder.bind(orderController));
 orderRouter.delete("/:orderId", orderController.deleteOrder.bind(orderController));
+orderRouter.post("/import", upload.single("file"), orderController.importOrders.bind(orderController));
 
 export default orderRouter;

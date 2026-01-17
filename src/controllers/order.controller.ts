@@ -44,4 +44,11 @@ export class OrderController {
 		res.status(200).json({ message: "Order deleted", data: deletedOrder, statusCode: 200 });
 		return;
 	}
+
+	async importOrders(req: Request, res: Response) {
+		const file = req.file;
+		const importedOrders = await this.orderUseCase.createManyOrders(file);
+		res.status(201).json({ message: "Orders imported", data: importedOrders, statusCode: 201 });
+		return;
+	}
 }
