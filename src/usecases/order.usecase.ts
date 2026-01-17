@@ -94,14 +94,11 @@ export class OrderUseCase implements IOrderUseCase {
 		const sheetName = workbook.SheetNames[0];
 		const worksheet = workbook.Sheets[sheetName];
 		const jsonData: RawOrderFileDTO[] = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-		let rowIndex = 1;
 		for (const row of jsonData) {
-			console.log(`Processing row: ${rowIndex++}`);
 			const orderData = this.parseOrderData(row);
 			// Check if this order number already exists in the ordersToCreate array
 			const existingOrder = ordersToCreate.find((o) => o.orderNumber === orderData.orderNumber);
 			if (existingOrder) {
-				console.log(`Adding item to existing order: ${orderData.orderNumber}`);
 				const item = this.parseOrderItem(row);
 				existingOrder.items.push(item);
 				continue;
