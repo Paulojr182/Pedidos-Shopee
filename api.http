@@ -1,0 +1,59 @@
+@base_url = http://localhost:5000
+@orderId = f0cbcbd5-a075-4e64-8a8f-c9413f6bb386
+
+### API Health Check
+GET {{base_url}}/
+Accept: application/json
+
+### PING Request
+GET {{base_url}}/api/ping
+Accept: application/json
+
+### Get Orders
+GET {{base_url}}/api/orders?page=2&pageSize=1
+Accept: application/json
+
+### Create Order
+POST {{base_url}}/api/orders
+Content-Type: application/json
+
+{
+    "clientName": "Michelle Souza",
+	"items": [
+        {
+            "color": "red",
+            "type": "t-shirt",
+            "nameToPrint": "",
+            "quantity": 1
+        }
+    ],
+	"orderNumber": "42423636",
+	"status": "a_fazer"
+}
+
+### Get Order by ID
+GET {{base_url}}/api/orders/{{orderId}}
+Accept: application/json
+
+### Get Order by orderNumber
+GET {{base_url}}/api/orders?orderNumber=42423
+Accept: application/json
+
+### Get Order by clientName
+GET {{base_url}}/api/orders?clientName=John Doe
+Accept: application/json
+
+### Get Order by orderNumber and clientName
+GET {{base_url}}/api/orders?orderNumber=12345&clientName=John Doe
+Accept: application/json
+
+### Update Order
+PUT {{base_url}}/api/orders/{{orderId}}
+Content-Type: application/json
+
+{
+    "status": "pendente"
+}
+
+### Delete Order
+DELETE {{base_url}}/api/orders/{{orderId}}
