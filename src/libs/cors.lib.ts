@@ -1,24 +1,29 @@
-import { CorsError } from "../errors";
+const allowList = process.env.CORS_ALLOW_LIST ? process.env.CORS_ALLOW_LIST.split(",").map((o) => o.trim()) : [];
 
-const allowList = process.env.CORS_ALLOW_LIST
-	? process.env.CORS_ALLOW_LIST.split(",").map((origin) => origin.trim())
-	: ["http://localhost:3000", "http://localhost:5173"];
-
-const env = process.env.NODE_ENV || "development";
+const env = process.env.NODE_ENV ?? "development";
 
 export const corsOptions = {
-	// If environment === development, allow all origins otherwise use allowList
 	origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-		if (env === "development") {
-			callback(null, true);
-		} else {
-			if (origin && allowList.indexOf(origin) !== -1) {
-				callback(null, true);
-			} else {
-				callback(new CorsError("Not allowed by CORS"));
-			}
+		// Allow no origin (Postman, server-to-server)
+		if (!origin) {
+			return callback(null, true);
 		}
+
+		// Development: allow all
+		if (env === "development") {
+			return callback(null, true);
+		}
+
+		// Production: valida allow list
+		if (allowList.includes(origin)) {
+			return callback(null, true);
+		}
+
+		// Not allowed
+		return callback(null, false);
 	},
+
+	credentials: true,
 	methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 	allowedHeaders: ["Content-Type", "Authorization"],
 };
