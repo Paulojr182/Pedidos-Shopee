@@ -218,7 +218,7 @@ export class OrderUseCase implements IOrderUseCase {
 
 	private parseOrderItem(data: RawOrderFileDTO): OrderItem {
 		const type = this.getItemTypeFromProductName(data["Nome do Produto"]);
-		const color = this.getDefaultColorForItemType(type);
+		const color = this.getDefaultColorForItemType(type, data["Nome da variação"]);
 		const nameToPrint = this.getNameToPrintFromData(data);
 		const item: OrderItem = {
 			type,
@@ -244,7 +244,7 @@ export class OrderUseCase implements IOrderUseCase {
 		}
 	}
 
-	private getDefaultColorForItemType(type: string): string {
+	private getDefaultColorForItemType(type: string, name: string): string {
 		switch (type) {
 			case "Roblox":
 			case "Minecraft":
@@ -252,7 +252,7 @@ export class OrderUseCase implements IOrderUseCase {
 			case "Barbie":
 				return "Cor padrão";
 			default:
-				return "Cor padrão";
+				return name;
 		}
 	}
 
