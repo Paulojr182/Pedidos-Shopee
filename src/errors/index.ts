@@ -1,2 +1,3 @@
 export { BadRequestError } from "./BadRequest.error";
 export { NotFoundError } from "./NotFound.error";
+export { CorsError } from "./Cors.error";

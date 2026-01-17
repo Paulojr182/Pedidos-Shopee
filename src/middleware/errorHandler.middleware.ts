@@ -1,8 +1,8 @@
-import { BadRequestError, NotFoundError } from "../errors";
+import { BadRequestError, NotFoundError, CorsError } from "../errors";
 import type { NextFunction, Request, Response } from "express";
 
 export function errorHandlerMiddleware(err: Error, _: Request, res: Response, __: NextFunction): void {
-	if (err instanceof BadRequestError || err instanceof NotFoundError) {
+	if (err instanceof BadRequestError || err instanceof NotFoundError || err instanceof CorsError) {
 		console.warn(`[${err.name}]: ${err.message}`);
 		res.status(err.statusCode).json(err.toJSON());
 		return;

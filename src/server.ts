@@ -5,6 +5,7 @@ import helmet from "helmet";
 import { connectDB, disconnectDB } from "./db";
 import routes from "./routes";
 import { errorHandlerMiddleware } from "./middleware/errorHandler.middleware";
+import { corsOptions } from "./libs/cors.lib";
 
 dotenv.config({
 	quiet: true,
@@ -12,7 +13,7 @@ dotenv.config({
 
 const app = express();
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
