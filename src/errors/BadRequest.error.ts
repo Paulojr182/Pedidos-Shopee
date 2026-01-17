@@ -2,6 +2,6 @@ import { DefaultError } from "./default.error";
 
 export class BadRequestError extends DefaultError {
 	constructor(message: string) {
-		super(message, 400);
+		super(message, 400, "BadRequestError");
 	}
 }

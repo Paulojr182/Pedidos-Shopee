@@ -1,4 +1,5 @@
-import type { CreateOrderDTO, IOrderUseCase, GetAllOrdersFilter } from "../usecases/order.usecase";
+import type { CreateOrderDTO, IOrderUseCase } from "../usecases/order.usecase";
+import type { GetAllOrdersFilter } from "../repositories/order.repository";
 import type { Request, Response } from "express";
 
 export class OrderController {
@@ -18,7 +19,7 @@ export class OrderController {
 	async getAllOrders(req: Request, res: Response) {
 		const { orderNumber, clientName, status, page, pageSize } = req.query as GetAllOrdersFilter;
 		const { orders, total, nextPage, previousPage } = await this.orderUseCase.getAllOrders({ orderNumber, clientName, status, page, pageSize });
-		res.status(200).json({ message: "Orders retrieved", data: { orders, total, nextPage, previousPage }, statusCode: 200 });
+		res.status(200).json({ message: "Orders retrieved", data: { orders }, total, nextPage, previousPage, statusCode: 200 });
 		return;
 	}
 

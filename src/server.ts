@@ -1,14 +1,17 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import helmet from "helmet";
 import { connectDB, disconnectDB } from "./db";
 import routes from "./routes";
+import { errorHandlerMiddleware } from "./middleware/errorHandler.middleware";
 
 dotenv.config({
 	quiet: true,
 });
 
 const app = express();
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -19,6 +22,8 @@ async function start() {
 	await connectDB();
 	app.use("/api", routes);
 	app.get("/", (_req, res) => res.json({ ok: true, message: "Server running" }));
+	// Error handling middleware
+	app.use(errorHandlerMiddleware);
 	app.listen(port, () => {
 		console.log(`Server listening on ${port}`);
 	});

@@ -10,7 +10,7 @@ GET {{base_url}}/api/ping
 Accept: application/json
 
 ### Get Orders
-GET {{base_url}}/api/orders?page=2&pageSize=1
+GET {{base_url}}/api/orders?page=1&pageSize=5
 Accept: application/json
 
 ### Create Order
