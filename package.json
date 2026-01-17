@@ -10,7 +10,7 @@
 		"dev": "tsnd --respawn src/server.ts",
 		"build": "tsc",
 		"start": "node dist/server.js",
-		"prepare": "husky",
+		"prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
 		"biome:fix": "biome format --write ./src",
 		"biome:check": "biome check ./src"
 	},
