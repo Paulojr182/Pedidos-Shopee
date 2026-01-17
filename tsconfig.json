@@ -8,7 +8,9 @@
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
-		"noImplicitAny": true
+		"noImplicitAny": true,
+		"types": ["node", "express"],
+		"moduleResolution": "node"
 	},
 	"include": ["src"],
 	"exclude": ["node_modules"]
