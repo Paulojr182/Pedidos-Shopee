@@ -19,7 +19,7 @@ export class OrderController {
 	async getAllOrders(req: Request, res: Response) {
 		const { orderNumber, clientName, status, page, pageSize } = req.query as GetAllOrdersFilter;
 		const { orders, total, nextPage, previousPage } = await this.orderUseCase.getAllOrders({ orderNumber, clientName, status, page, pageSize });
-		res.status(200).json({ message: "Orders retrieved", data: { orders }, total, nextPage, previousPage, statusCode: 200 });
+		res.status(200).json({ message: "Orders retrieved", data: orders, total, nextPage, previousPage, statusCode: 200 });
 		return;
 	}
 
