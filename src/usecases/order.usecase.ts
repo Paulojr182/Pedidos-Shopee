@@ -189,8 +189,8 @@ export class OrderUseCase implements IOrderUseCase {
 		if (updatedData.orderNumber !== undefined && updatedData.orderNumber.trim() === "") {
 			throw new BadRequestError("Order number cannot be empty");
 		}
-		if (updatedData.status !== undefined && !["pendente", "a_fazer", "projeto_feito", "pronto"].includes(updatedData.status)) {
-			throw new BadRequestError("Invalid order status, must be one of: pendente, a_fazer, projeto_feito, pronto");
+		if (updatedData.status !== undefined && !["pendente", "a_fazer", "projeto_feito", "fabricando", "pronto", "enviado"].includes(updatedData.status)) {
+			throw new BadRequestError("Invalid order status, must be one of: pendente, a_fazer, projeto_feito, fabricando, pronto, enviado");
 		}
 	}
 

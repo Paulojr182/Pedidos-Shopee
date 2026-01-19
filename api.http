@@ -47,6 +47,10 @@ Accept: application/json
 GET {{base_url}}/api/orders?orderNumber=12345&clientName=John Doe
 Accept: application/json
 
+### Get Orders by Status "pendente", "a_fazer", "projeto_feito", "fabricando", "pronto", "enviado"
+GET {{base_url}}/api/orders?status=projeto_feito
+Accept: application/json
+
 ### Update Order
 PUT {{base_url}}/api/orders/{{orderId}}
 Content-Type: application/json

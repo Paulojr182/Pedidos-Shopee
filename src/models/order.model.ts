@@ -8,7 +8,7 @@ export interface OrderItem {
 	quantity: number;
 }
 
-export type OrderStatus = "pendente" | "a_fazer" | "projeto_feito" | "pronto";
+export type OrderStatus = "pendente" | "a_fazer" | "projeto_feito" | "fabricando" | "pronto" | "enviado";
 
 export interface OrderDocument extends Document {
 	clientName: string;
@@ -38,7 +38,7 @@ const OrderSchema = new Schema<OrderDocument>(
 		orderNumber: { type: String, required: true, unique: true },
 		status: {
 			type: String,
-			enum: ["pendente", "a_fazer", "projeto_feito", "pronto"],
+			enum: ["pendente", "a_fazer", "projeto_feito", "fabricando", "pronto", "enviado"],
 			default: "pendente",
 			required: true,
 		},
