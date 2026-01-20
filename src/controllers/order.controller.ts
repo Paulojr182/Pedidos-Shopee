@@ -30,6 +30,12 @@ export class OrderController {
 		return;
 	}
 
+	async getCountOrdersByStatus(_: Request, res: Response) {
+		const statusCounts = await this.orderUseCase.getCountOrdersByStatus();
+		res.status(200).json({ message: "Count orders retrieved", data: statusCounts, statusCode: 200 });
+		return;
+	}
+
 	async updateOrder(req: Request, res: Response) {
 		const { orderId } = req.params as { orderId: string };
 		const updatedData: Partial<CreateOrderDTO> = req.body;

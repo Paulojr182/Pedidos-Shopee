@@ -8,6 +8,7 @@ export interface IOrderUseCase {
 	createOrder(orderData: CreateOrderDTO): Promise<OrderResponseDTO>;
 	getAllOrders(filter: GetAllOrdersFilter): Promise<PaginatedOrderResponseDTO>;
 	getOrder(orderId: string): Promise<OrderResponseDTO>;
+	getCountOrdersByStatus(): Promise<Partial<Record<OrderStatus, number>>>;
 	updateOrder(orderId: string, updatedData: Partial<CreateOrderDTO>): Promise<OrderResponseDTO>;
 	deleteOrder(orderId: string): Promise<boolean>;
 	createManyOrders(file: Express.Multer.File | undefined): Promise<{ orders: OrderResponseDTO[]; failed: Partial<CreateOrderDTO>[] }>;
@@ -74,6 +75,30 @@ export class OrderUseCase implements IOrderUseCase {
 			throw new NotFoundError(`Order with id ${orderId} not found`);
 		}
 		return order;
+	}
+
+	async getCountOrdersByStatus(): Promise<Partial<Record<OrderStatus, number>>> {
+		const statusCounts: Partial<Record<OrderStatus, number>> = {
+			pendente: 0,
+			a_fazer: 0,
+			projeto_feito: 0,
+			fabricando: 0,
+			pronto: 0,
+		};
+
+		const pendenteCount = await this.orderRepository.countByStatus("pendente");
+		const aFazerCount = await this.orderRepository.countByStatus("a_fazer");
+		const projetoFeitoCount = await this.orderRepository.countByStatus("projeto_feito");
+		const fabricandoCount = await this.orderRepository.countByStatus("fabricando");
+		const prontoCount = await this.orderRepository.countByStatus("pronto");
+
+		statusCounts.pendente = pendenteCount;
+		statusCounts.a_fazer = aFazerCount;
+		statusCounts.projeto_feito = projetoFeitoCount;
+		statusCounts.fabricando = fabricandoCount;
+		statusCounts.pronto = prontoCount;
+
+		return statusCounts;
 	}
 
 	async updateOrder(orderId: string, updatedData: Partial<CreateOrderDTO>) {

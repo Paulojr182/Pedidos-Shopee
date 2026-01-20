@@ -13,6 +13,7 @@ const orderRouter = Router();
 orderRouter.post("/", orderController.createOrder.bind(orderController));
 orderRouter.get("/", orderController.getAllOrders.bind(orderController));
 orderRouter.get("/:orderId", orderController.getOrder.bind(orderController));
+orderRouter.get("/status/count", orderController.getCountOrdersByStatus.bind(orderController));
 orderRouter.put("/:orderId", orderController.updateOrder.bind(orderController));
 orderRouter.delete("/:orderId", orderController.deleteOrder.bind(orderController));
 orderRouter.post("/import", upload.single("file"), orderController.importOrders.bind(orderController));

@@ -51,6 +51,10 @@ Accept: application/json
 GET {{base_url}}/api/orders?status=projeto_feito
 Accept: application/json
 
+### Get Count of Orders by Status
+GET {{base_url}}/api/orders/status/count
+Accept: application/json
+
 ### Update Order
 PUT {{base_url}}/api/orders/{{orderId}}
 Content-Type: application/json

@@ -6,6 +6,7 @@ export interface IOrderRepository {
 	create(orderData: Partial<OrderDocument>): Promise<Order>;
 	findAll(filter: GetAllOrdersFilter): Promise<{ orders: Order[]; total: number }>;
 	findById(orderId: string): Promise<Order | null>;
+	countByStatus(status: Partial<OrderStatus>): Promise<number>;
 	update(orderId: string, updatedOrder: Partial<OrderDocument>): Promise<Order | null>;
 	delete(orderId: string): Promise<boolean>;
 	createManyOrders(ordersData: Partial<OrderDocument>[]): Promise<{ orders: Order[]; failed: Partial<OrderDocument>[] }>;
@@ -57,6 +58,11 @@ export class OrderRepository implements IOrderRepository {
 	async findById(orderId: string): Promise<Order | null> {
 		const order = await OrderModel.findOne({ id: orderId }).exec();
 		return order ? this.mapToDTO(order) : null;
+	}
+
+	async countByStatus(status: Partial<OrderStatus>): Promise<number> {
+		const count = await OrderModel.countDocuments({ status }).exec();
+		return count;
 	}
 
 	async update(orderId: string, updatedOrder: Partial<OrderDocument>): Promise<Order | null> {
