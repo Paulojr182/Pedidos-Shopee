@@ -18,6 +18,7 @@ export interface GetAllOrdersFilter {
 	status?: OrderStatus;
 	page?: number;
 	pageSize?: number;
+	search?: string;
 }
 
 type Query = {
@@ -26,6 +27,7 @@ type Query = {
 	status?: string;
 	page?: number;
 	pageSize?: number;
+	$or?: { [key: string]: RegExp }[];
 };
 
 export interface Order {
@@ -120,6 +122,13 @@ export class OrderRepository implements IOrderRepository {
 		}
 		if (filter.status) {
 			query.status = filter.status;
+		}
+
+		if (filter.search) {
+			const searchRegex = new RegExp(filter.search, "i");
+			query.$or = [{ orderNumber: searchRegex }, { clientName: searchRegex }, { items: { $elemMatch: { nameToPrint: searchRegex } } }] as {
+				[key: string]: RegExp;
+			}[];
 		}
 
 		return query;
