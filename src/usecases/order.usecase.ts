@@ -274,8 +274,10 @@ export class OrderUseCase implements IOrderUseCase {
 			case "Roblox":
 			case "Minecraft":
 			case "Harry Potter":
-			case "Barbie":
-				return "Cor padrão";
+			case "Barbie": {
+				const [_, quantity] = name.split(",");
+				return `${quantity},Cor padrão`;
+			}
 			default:
 				return name;
 		}
