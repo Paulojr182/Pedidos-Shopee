@@ -37,6 +37,8 @@ export interface Order {
 	items: OrderDocument["items"];
 	orderNumber: string;
 	status: OrderStatus;
+	orderCreatedAt: Date;
+	shippingDeadline: Date;
 }
 
 export class OrderRepository implements IOrderRepository {
@@ -142,6 +144,8 @@ export class OrderRepository implements IOrderRepository {
 			items: doc.items,
 			orderNumber: doc.orderNumber,
 			status: doc.status,
+			orderCreatedAt: doc.orderCreatedAt,
+			shippingDeadline: doc.shippingDeadline,
 		} as OrderDocument;
 	}
 }

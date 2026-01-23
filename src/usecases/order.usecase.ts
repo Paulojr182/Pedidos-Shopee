@@ -19,6 +19,8 @@ export interface CreateOrderDTO {
 	items: OrderItem[];
 	orderNumber: string;
 	status: OrderStatus;
+	orderCreatedAt: Date;
+	shippingDeadline: Date;
 }
 
 export interface OrderResponseDTO {
@@ -28,6 +30,8 @@ export interface OrderResponseDTO {
 	items: OrderItem[];
 	orderNumber: string;
 	status: OrderStatus;
+	orderCreatedAt: Date;
+	shippingDeadline: Date;
 }
 
 export interface PaginatedOrderResponseDTO {
@@ -46,6 +50,8 @@ export interface RawOrderFileDTO {
 	"Nome da variação": string;
 	"Observação do comprador": string;
 	Quantidade: number;
+	"Data de criação do pedido": string;
+	"Data prevista de envio": string;
 }
 
 export class OrderUseCase implements IOrderUseCase {
@@ -217,12 +223,20 @@ export class OrderUseCase implements IOrderUseCase {
 		if (updatedData.status !== undefined && !["pendente", "a_fazer", "projeto_feito", "fabricando", "pronto", "enviado"].includes(updatedData.status)) {
 			throw new BadRequestError("Invalid order status, must be one of: pendente, a_fazer, projeto_feito, fabricando, pronto, enviado");
 		}
+		if (updatedData.orderCreatedAt !== undefined && Number.isNaN(updatedData.orderCreatedAt.getTime())) {
+			throw new BadRequestError("Invalid order created at date");
+		}
+		if (updatedData.shippingDeadline !== undefined && Number.isNaN(updatedData.shippingDeadline.getTime())) {
+			throw new BadRequestError("Invalid shipping deadline date");
+		}
 	}
 
 	private parseOrderData(row: RawOrderFileDTO): CreateOrderDTO {
 		const orderData: CreateOrderDTO = {
 			clientName: row["Nome de usuário (comprador)"],
 			orderNumber: row["ID do pedido"],
+			orderCreatedAt: new Date(row["Data de criação do pedido"]),
+			shippingDeadline: new Date(row["Data prevista de envio"]),
 			status: row.Status as OrderStatus,
 			items: [],
 		};

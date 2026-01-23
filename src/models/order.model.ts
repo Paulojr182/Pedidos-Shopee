@@ -17,6 +17,8 @@ export interface OrderDocument extends Document {
 	items: OrderItem[];
 	orderNumber: string;
 	status: OrderStatus;
+	orderCreatedAt: Date;
+	shippingDeadline: Date;
 }
 
 const OrderItemSchema = new Schema<OrderItem>(
@@ -36,6 +38,8 @@ const OrderSchema = new Schema<OrderDocument>(
 		id: { type: String, required: true, unique: true },
 		items: { type: [OrderItemSchema], required: true },
 		orderNumber: { type: String, required: true, unique: true },
+		orderCreatedAt: { type: Date, required: true },
+		shippingDeadline: { type: Date, required: true },
 		status: {
 			type: String,
 			enum: ["pendente", "a_fazer", "projeto_feito", "fabricando", "pronto", "enviado"],
