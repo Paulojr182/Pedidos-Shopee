@@ -19,15 +19,17 @@ export interface GetAllOrdersFilter {
 	page?: number;
 	pageSize?: number;
 	search?: string;
+	shipmentExpiresOnBefore?: string;
 }
 
 type Query = {
 	orderNumber?: string;
 	clientName?: string;
-	status?: string;
+	status?: string | { $ne: string };
 	page?: number;
 	pageSize?: number;
 	$or?: { [key: string]: RegExp }[];
+	shippingDeadline?: { $lt: Date };
 };
 
 export interface Order {
@@ -50,12 +52,14 @@ export class OrderRepository implements IOrderRepository {
 
 	async findAll(filter: GetAllOrdersFilter): Promise<{ orders: Order[]; total: number }> {
 		const query: Query = this.buildQuery(filter);
-
 		const page = filter.page && filter.page > 0 ? filter.page : 1;
 		const pageSize = filter.pageSize && filter.pageSize > 0 ? filter.pageSize : 10;
 		const skip = (page - 1) * pageSize;
 		const total = await OrderModel.countDocuments(query).exec();
-		const orders = await OrderModel.find(query).skip(skip).limit(pageSize).exec();
+		const orders = await OrderModel.find({ ...query })
+			.skip(skip)
+			.limit(pageSize)
+			.exec();
 		return { orders: orders.map(this.mapToDTO), total };
 	}
 
@@ -131,6 +135,17 @@ export class OrderRepository implements IOrderRepository {
 			query.$or = [{ orderNumber: searchRegex }, { clientName: searchRegex }, { items: { $elemMatch: { nameToPrint: searchRegex } } }] as {
 				[key: string]: RegExp;
 			}[];
+		}
+
+		if (filter.shipmentExpiresOnBefore) {
+			const expiredAt = new Date(filter.shipmentExpiresOnBefore);
+			if (!Number.isNaN(expiredAt.getTime())) {
+				// Filter by shippingDeadline: less than the specified date and greater than or equal to 24 hours before
+				query.shippingDeadline = {
+					$lt: expiredAt,
+				};
+				query.status = { $ne: "enviado" };
+			}
 		}
 
 		return query;
