@@ -8,6 +8,7 @@
 	"main": "server.js",
 	"scripts": {
 		"dev": "tsnd --respawn src/server.ts",
+		"migrate": "ts-node-dev src/models/migration.ts",
 		"build": "tsc",
 		"typecheck": "tsc --noEmit",
 		"start": "node dist/server.js",
