@@ -23,7 +23,19 @@ const port = process.env.PORT || 3000;
 async function start() {
 	await connectDB();
 	app.use("/api", routes);
-	app.get("/", (_req, res) => res.json({ ok: true, message: "Server running" }));
+	app.get("/", (_req, res) =>
+		res.json({
+			ok: true,
+			message: "Server running",
+			environment: process.env.NODE_ENV,
+			timestamp: new Date().toISOString(),
+			uptime: process.uptime(),
+			memory: {
+				used: `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)} MB`,
+				total: `${Math.round(process.memoryUsage().heapTotal / 1024 / 1024)} MB`,
+			},
+		}),
+	);
 	// Error handling middleware
 	app.use(errorHandlerMiddleware);
 	app.listen(port, () => {
