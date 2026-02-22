@@ -34,6 +34,7 @@ async function start() {
 				used: `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)} MB`,
 				total: `${Math.round(process.memoryUsage().heapTotal / 1024 / 1024)} MB`,
 			},
+			version: "1.0.0",
 		}),
 	);
 	// Error handling middleware

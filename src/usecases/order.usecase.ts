@@ -257,7 +257,7 @@ export class OrderUseCase implements IOrderUseCase {
 
 	private parseOrderItem(data: RawOrderFileDTO): OrderItem {
 		const type = this.getItemTypeFromProductName(data["Nome do Produto"]);
-		const color = this.getDefaultColorForItemType(type, data["Nome da variação"]);
+		const color = this.getDefaultColorForItemType(type, data["Nome da variação"]) || "Item sem cor";
 		const nameToPrint = this.getNameToPrintFromData(data);
 		const item: OrderItem = {
 			type,

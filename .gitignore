@@ -3,5 +3,6 @@ dist/
 .env
 .vscode/
 temp/
-orders.xlsx
+orders*
+Order*
 .~lock*
